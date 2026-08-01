@@ -133,18 +133,28 @@ if ("scrollRestoration" in history) {
 function resetScrollOnLoad() {
   if (!window.location.hash) {
     window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }
 }
 
-window.addEventListener("pageshow", (event) => {
+window.addEventListener("pageshow", () => {
   if (!window.location.hash) {
-    window.scrollTo(0, 0);
+    resetScrollOnLoad();
+    setTimeout(resetScrollOnLoad, 0);
+    requestAnimationFrame(resetScrollOnLoad);
+    setTimeout(resetScrollOnLoad, 100);
   }
 });
 
 window.addEventListener("scroll", updateActiveNavLink);
 window.addEventListener("load", () => {
-  resetScrollOnLoad();
+  if (!window.location.hash) {
+    resetScrollOnLoad();
+    setTimeout(resetScrollOnLoad, 0);
+    requestAnimationFrame(resetScrollOnLoad);
+    setTimeout(resetScrollOnLoad, 100);
+  }
   updateActiveNavLink();
 });
 
