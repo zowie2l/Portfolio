@@ -195,8 +195,12 @@
       <section id="projects" class="section muted">
         <p class="section-label">Projects</p>
         <h2>Project Gallery</h2>
+        <div class="project-filter">
+          <button class="button secondary active" type="button" data-filter="embedded-system">Embedded System</button>
+          <button class="button secondary" type="button" data-filter="web-design">Web Design</button>
+        </div>
         <div class="portfolio-project-grid">
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture2.png" alt="Project preview">
             <h3>Sumo Bot</h3>
             <details>
@@ -204,7 +208,7 @@
               <p>A robot designed for sumo robot competitions, where two robots push against each other and try to force the opponent outside the ring.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture3.png" alt="Project preview">
             <h3>Roof Gutter Cleaner</h3>
             <details>
@@ -212,7 +216,7 @@
               <p>A cleaning device made to remove debris from roof gutters, such as leaves, plastic, and other blockages, so rainwater can flow properly.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture4.png" alt="Project preview">
             <h3>Remotely Operated Vehicle for Monitoring Marine Protected Areas</h3>
             <details>
@@ -220,7 +224,7 @@
               <p>Our capstone project, designed to monitor ocean and coral reef pH levels and help detect possible coral bleaching. The system supports the Bureau of Fisheries and Aquatic Resources (BFAR) by providing information that can help them take immediate action.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture5.png" alt="Project preview">
             <h3>Earthquake Alarm</h3>
             <details>
@@ -228,7 +232,7 @@
               <p>An alarm system that detects strong vibration, such as an earthquake, and sends a text message alert to the owner when movement is detected.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture6.png" alt="Project preview">
             <h3>Automatic Alcohol Dispenser</h3>
             <details>
@@ -236,7 +240,7 @@
               <p>An electronic alcohol dispenser that uses an IR sensor to detect a hand within close range and automatically dispense alcohol without physical contact.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture7.png" alt="Project preview">
             <h3>555 Timer IC Roulette</h3>
             <details>
@@ -244,7 +248,7 @@
               <p>A roulette-style LED circuit using a 555 timer IC and a 74HC4017 IC. When the button is pressed, the circuit randomly lights an LED like a roulette selector.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture8.png" alt="Project preview">
             <h3>Scale Measuring Automatic Receipt</h3>
             <details>
@@ -252,7 +256,7 @@
               <p>A weighing scale system that can measure up to 10kg and display the weight on an LCD. It includes tare, next, and print buttons. The next button changes the selected product, such as pork, beef, or chicken, then calculates the price based on the weight and prints a receipt.</p>
             </details>
           </article>
-          <article class="portfolio-project-card">
+          <article class="portfolio-project-card" data-category="embedded-system">
             <img src="Porjects/Picture9.png" alt="Project preview">
             <h3>RehabGlove</h3>
             <details>
@@ -260,6 +264,54 @@
               <p>A rehabilitation glove with a heartbeat sensor for pulse monitoring and servo motors designed to assist stroke patients in recovering hand and finger movement.</p>
             </details>
           </article>
+<article class="portfolio-project-card web-stack-card" data-category="web-design">
+
+    <div class="project-image-card">
+
+        <div class="card-stack">
+
+            <img src="web-design/Wheel of Fortune.png" class="stack-item active" alt="Wheel of Fortune">
+
+            <img src="web-design/Name Table.png" class="stack-item" alt="Name Table">
+
+            <img src="web-design/Numbers Table.png" class="stack-item" alt="Numbers Table">
+
+            <img src="web-design/Colors Table.png" class="stack-item" alt="Colors Table">
+
+        </div>
+
+        <div class="image-carousel-hint">
+            Click the card
+        </div>
+
+    </div>
+
+    <h3>Wheel of Fortune Roulette</h3>
+
+    <details>
+
+        <summary>View Details</summary>
+
+        <p>
+            A Wheel of Fortune roulette application that lets users randomly
+            select names, numbers, or colors using a casino-inspired spinning
+            wheel interface.
+        </p>
+
+        <p>
+            <a href="https://zowie2l.github.io/Roulette_ni_Zowe/"
+               target="_blank"
+               rel="noreferrer">
+               Open Live Demo
+            </a>
+        </p>
+
+    </details>
+
+</article>
+        </div>
+        <div class="empty-project-state" aria-live="polite">
+          No web design projects have been added yet. Add your images and project details in the <strong>Portfolio/web-design</strong> folder.
         </div>
       </section>
 
