@@ -126,8 +126,27 @@ function hideImageViewer() {
   viewerImage.src = "";
 }
 
+if ("scrollRestoration" in history) {
+  history.scrollRestoration = "manual";
+}
+
+function resetScrollOnLoad() {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+}
+
+window.addEventListener("pageshow", (event) => {
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+  }
+});
+
 window.addEventListener("scroll", updateActiveNavLink);
-window.addEventListener("load", updateActiveNavLink);
+window.addEventListener("load", () => {
+  resetScrollOnLoad();
+  updateActiveNavLink();
+});
 
 previewImages.forEach((image) => {
   image.addEventListener("click", () => openImageViewer(image));
