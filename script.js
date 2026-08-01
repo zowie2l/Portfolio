@@ -1,9 +1,100 @@
 const navLinks = document.querySelectorAll(".nav-links a");
 const sections = document.querySelectorAll("main section[id]");
-const previewImages = document.querySelectorAll(".certificate-card img, .portfolio-project-card img");
+const previewImages = document.querySelectorAll(".certificate-card img, .portfolio-project-card:not([data-category='web-design']) img");
+const webDesignStacks = document.querySelectorAll(".card-stack");
 const imageViewer = document.querySelector("#imageViewer");
 const viewerImage = document.querySelector("#viewerImage");
 const closeViewer = document.querySelector(".image-viewer-close");
+const filterButtons = document.querySelectorAll(".project-filter button");
+const projectCards = document.querySelectorAll(".portfolio-project-card");
+const emptyState = document.querySelector(".empty-project-state");
+
+function renderStack(card) {
+  const gallery = card.dataset.gallery?.split(",") || [];
+  const images = Array.from(card.querySelectorAll(".stack-item"));
+  images.forEach((img, index) => {
+    const fileName = gallery[index % gallery.length];
+    img.src = `web-design/${fileName}`;
+    img.alt = `Wheel of Fortune screenshot ${index + 1}`;
+  });
+}
+
+function rotateStack(stack){
+
+    const first = stack.firstElementChild;
+
+    stack.appendChild(first);
+
+    updateStack(stack);
+
+}
+
+function updateStack(stack){
+
+    const cards = [...stack.children];
+
+    cards.forEach((card,index)=>{
+
+        card.style.zIndex = cards.length-index;
+
+        card.style.transform = `
+        translate(${-15*index}px,${15*index}px)
+        rotate(${-4*index}deg)
+        scale(${1-index*0.04})
+        `;
+
+        card.style.opacity = 1-index*0.1;
+
+    });
+
+}
+
+function openImageViewer(image) {
+  viewerImage.src = image.src;
+  viewerImage.alt = image.alt;
+  imageViewer.classList.add("show");
+  imageViewer.setAttribute("aria-hidden", "false");
+}
+
+previewImages.forEach((image) => {
+  image.addEventListener("click", () => openImageViewer(image));
+});
+
+webDesignStacks.forEach(stack=>{
+
+    updateStack(stack);
+
+    stack.addEventListener("click",()=>{
+
+        rotateStack(stack);
+
+    });
+
+});
+
+function applyProjectFilter(filter) {
+  let visibleCount = 0;
+
+  projectCards.forEach((card) => {
+    const category = card.dataset.category;
+    const isVisible = category === filter;
+    card.classList.toggle("hidden", !isVisible);
+    if (isVisible) {
+      visibleCount += 1;
+    }
+  });
+
+  emptyState.classList.toggle("show", visibleCount === 0);
+}
+
+filterButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    filterButtons.forEach((btn) => btn.classList.toggle("active", btn === button));
+    applyProjectFilter(button.dataset.filter);
+  });
+});
+
+applyProjectFilter("embedded-system");
 
 function updateActiveNavLink() {
   let currentSection = "";
