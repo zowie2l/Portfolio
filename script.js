@@ -2,75 +2,139 @@ const navLinks = document.querySelectorAll(".nav-links a");
 const sections = document.querySelectorAll("main section[id]");
 const previewImages = document.querySelectorAll(".certificate-card img, .portfolio-project-card:not([data-category='web-design']) img");
 const webDesignStacks = document.querySelectorAll(".card-stack");
+const seePhotosButtons = document.querySelectorAll(".see-photos-btn");
 const imageViewer = document.querySelector("#imageViewer");
 const viewerImage = document.querySelector("#viewerImage");
+const viewerCounter = document.querySelector("#viewerCounter");
 const closeViewer = document.querySelector(".image-viewer-close");
+const viewerPrev = document.querySelector(".image-viewer-prev");
+const viewerNext = document.querySelector(".image-viewer-next");
 const filterButtons = document.querySelectorAll(".project-filter button");
 const projectCards = document.querySelectorAll(".portfolio-project-card");
 const emptyState = document.querySelector(".empty-project-state");
 
-function renderStack(card) {
-  const gallery = card.dataset.gallery?.split(",") || [];
-  const images = Array.from(card.querySelectorAll(".stack-item"));
-  images.forEach((img, index) => {
-    const fileName = gallery[index % gallery.length];
-    img.src = `web-design/${fileName}`;
-    img.alt = `Wheel of Fortune screenshot ${index + 1}`;
+function rotateStack(stack) {
+  const first = stack.firstElementChild;
+  stack.appendChild(first);
+  updateStack(stack);
+}
+
+function updateStack(stack) {
+  const cards = [...stack.children];
+
+  cards.forEach((card, index) => {
+    card.style.zIndex = cards.length - index;
+    card.style.transform = `
+      translate(${-15 * index}px,${15 * index}px)
+      rotate(${-4 * index}deg)
+      scale(${1 - index * 0.04})
+    `;
+    card.style.opacity = 1 - index * 0.1;
   });
 }
 
-function rotateStack(stack){
+webDesignStacks.forEach((stack) => {
+  updateStack(stack);
 
-    const first = stack.firstElementChild;
+  stack.addEventListener("click", () => {
+    rotateStack(stack);
+  });
+});
 
-    stack.appendChild(first);
+/* ===========================
+   IMAGE VIEWER (single photos + galleries)
+   =========================== */
 
-    updateStack(stack);
+let currentGallery = [];
+let currentGalleryIndex = 0;
 
+function showGalleryImage(index) {
+  if (!currentGallery.length) return;
+
+  currentGalleryIndex = (index + currentGallery.length) % currentGallery.length;
+  const item = currentGallery[currentGalleryIndex];
+
+  viewerImage.src = item.src;
+  viewerImage.alt = item.alt;
+
+  const isGallery = currentGallery.length > 1;
+  viewerPrev.style.display = isGallery ? "flex" : "none";
+  viewerNext.style.display = isGallery ? "flex" : "none";
+
+  if (isGallery) {
+    viewerCounter.textContent = `${currentGalleryIndex + 1} / ${currentGallery.length}`;
+    viewerCounter.style.display = "inline-flex";
+  } else {
+    viewerCounter.style.display = "none";
+  }
 }
 
-function updateStack(stack){
-
-    const cards = [...stack.children];
-
-    cards.forEach((card,index)=>{
-
-        card.style.zIndex = cards.length-index;
-
-        card.style.transform = `
-        translate(${-15*index}px,${15*index}px)
-        rotate(${-4*index}deg)
-        scale(${1-index*0.04})
-        `;
-
-        card.style.opacity = 1-index*0.1;
-
-    });
-
-}
-
-function openImageViewer(image) {
-  viewerImage.src = image.src;
-  viewerImage.alt = image.alt;
+function openImageViewer(images, startIndex = 0) {
+  currentGallery = images;
+  showGalleryImage(startIndex);
   imageViewer.classList.add("show");
   imageViewer.setAttribute("aria-hidden", "false");
 }
 
+function hideImageViewer() {
+  imageViewer.classList.remove("show");
+  imageViewer.setAttribute("aria-hidden", "true");
+  viewerImage.src = "";
+  currentGallery = [];
+  currentGalleryIndex = 0;
+}
+
+// Single-image preview (embedded system project shots + certificates)
 previewImages.forEach((image) => {
-  image.addEventListener("click", () => openImageViewer(image));
+  image.addEventListener("click", () => {
+    openImageViewer([{ src: image.src, alt: image.alt }], 0);
+  });
 });
 
-webDesignStacks.forEach(stack=>{
-
-    updateStack(stack);
-
-    stack.addEventListener("click",()=>{
-
-        rotateStack(stack);
-
-    });
-
+// "See Photos" button on web design cards opens the full gallery for that project
+seePhotosButtons.forEach((button) => {
+  button.addEventListener("click", (event) => {
+    event.stopPropagation();
+    const projectImageCard = button.closest(".project-image-card");
+    const stackImages = Array.from(projectImageCard.querySelectorAll(".stack-item"));
+    const images = stackImages.map((img) => ({ src: img.src, alt: img.alt }));
+    openImageViewer(images, 0);
+  });
 });
+
+viewerPrev.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showGalleryImage(currentGalleryIndex - 1);
+});
+
+viewerNext.addEventListener("click", (event) => {
+  event.stopPropagation();
+  showGalleryImage(currentGalleryIndex + 1);
+});
+
+closeViewer.addEventListener("click", hideImageViewer);
+
+imageViewer.addEventListener("click", (event) => {
+  if (event.target === imageViewer) {
+    hideImageViewer();
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (!imageViewer.classList.contains("show")) return;
+
+  if (event.key === "Escape") {
+    hideImageViewer();
+  } else if (event.key === "ArrowLeft") {
+    showGalleryImage(currentGalleryIndex - 1);
+  } else if (event.key === "ArrowRight") {
+    showGalleryImage(currentGalleryIndex + 1);
+  }
+});
+
+/* ===========================
+   PROJECT FILTER
+   =========================== */
 
 function applyProjectFilter(filter) {
   let visibleCount = 0;
@@ -96,6 +160,10 @@ filterButtons.forEach((button) => {
 
 applyProjectFilter("embedded-system");
 
+/* ===========================
+   NAV + SCROLL
+   =========================== */
+
 function updateActiveNavLink() {
   let currentSection = "";
 
@@ -111,19 +179,6 @@ function updateActiveNavLink() {
     const isActive = link.getAttribute("href") === `#${currentSection}`;
     link.classList.toggle("active", isActive);
   });
-}
-
-function openImageViewer(image) {
-  viewerImage.src = image.src;
-  viewerImage.alt = image.alt;
-  imageViewer.classList.add("show");
-  imageViewer.setAttribute("aria-hidden", "false");
-}
-
-function hideImageViewer() {
-  imageViewer.classList.remove("show");
-  imageViewer.setAttribute("aria-hidden", "true");
-  viewerImage.src = "";
 }
 
 if ("scrollRestoration" in history) {
@@ -158,25 +213,10 @@ window.addEventListener("load", () => {
   updateActiveNavLink();
 });
 
-previewImages.forEach((image) => {
-  image.addEventListener("click", () => openImageViewer(image));
-});
+/* ===========================
+   3D TILT EFFECT FOR PROJECT CARDS
+   =========================== */
 
-closeViewer.addEventListener("click", hideImageViewer);
-
-imageViewer.addEventListener("click", (event) => {
-  if (event.target === imageViewer) {
-    hideImageViewer();
-  }
-});
-
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") {
-    hideImageViewer();
-  }
-});
-
-// 3D tilt effect for project cards
 const tiltCards = document.querySelectorAll(".portfolio-project-card");
 const supportsHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
