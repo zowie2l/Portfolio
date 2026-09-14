@@ -430,24 +430,6 @@ h3 {
   letter-spacing: 0.04em;
 }
 
-.easyeda-badge {
-  background: linear-gradient(180deg, rgba(20, 33, 58, 0.96), rgba(10, 18, 34, 0.9));
-}
-
-.easyeda-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, #14b8a6, #22d3ee);
-  color: #031827;
-  font-size: 1.7rem;
-  font-weight: 900;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
-}
-
 @keyframes marquee-left {
   from {
     transform: translateX(0);
