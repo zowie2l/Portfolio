@@ -258,3 +258,58 @@ if (supportsHover) {
     });
   });
 }
+
+/* ===========================
+   MOBILE MENU (hamburger)
+   =========================== */
+
+const siteHeader = document.querySelector(".site-header");
+const navToggle = document.querySelector(".nav-toggle");
+
+function setMenuOpen(open) {
+  siteHeader.classList.toggle("nav-open", open);
+  navToggle.setAttribute("aria-expanded", String(open));
+  navToggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+}
+
+navToggle.addEventListener("click", () => {
+  setMenuOpen(!siteHeader.classList.contains("nav-open"));
+});
+
+// Tapping a link jumps to the section and closes the menu
+navLinks.forEach((link) => {
+  link.addEventListener("click", () => setMenuOpen(false));
+});
+
+// Close when tapping outside the menu or pressing Escape
+document.addEventListener("click", (event) => {
+  if (siteHeader.classList.contains("nav-open") && !siteHeader.contains(event.target)) {
+    setMenuOpen(false);
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    setMenuOpen(false);
+  }
+});
+
+// Reset when the screen gets wide enough for the full menu
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 900) {
+    setMenuOpen(false);
+  }
+});
+
+/* ===========================
+   PROJECT DETAILS BUTTON LABEL
+   "View Details" when closed, "Hide Details" when open
+   =========================== */
+
+document.querySelectorAll(".portfolio-project-card details").forEach((details) => {
+  const summary = details.querySelector("summary");
+
+  details.addEventListener("toggle", () => {
+    summary.textContent = details.open ? "Hide Details" : "View Details";
+  });
+});
